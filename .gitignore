@@ -3,4 +3,7 @@
 
 # Tests
 /report
+
+# Env
 /.vscode
+/.ssh
