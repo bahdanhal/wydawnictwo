@@ -144,7 +144,7 @@ class CartTest extends TestCase
         ];
     }
 
-    private function buildTestProduct(int $id, int $price): Product
+    private function buildTestProduct(int $id, float $price): Product
     {
         return (new Product())->setId($id)->setUnitPrice($price);
     }
