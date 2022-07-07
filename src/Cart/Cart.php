@@ -14,7 +14,7 @@ class Cart extends BaseEntity implements PreparedDataInterface
     
     public function __construct()
     {
-        $this->items = []; 
+        $this->items = [];
     }
 
     public function __clone()
@@ -42,7 +42,6 @@ class Cart extends BaseEntity implements PreparedDataInterface
             unset($this->items[$key]);
             $this->items = array_values($this->items);
         } catch (OutOfBoundsException $e) {
-            
         }
         return $this;
     }
