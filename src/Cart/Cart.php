@@ -72,6 +72,15 @@ class Cart extends BaseEntity implements PreparedDataInterface
         return $totalPrice;
     }
 
+    public function getTotalPriceGross(): float
+    {
+        $totalPriceGross = 0;
+        foreach ($this->items as $item) {
+            $totalPriceGross += $item->getProduct()->getUnitPriceGross() * $item->getQuantity();
+        }
+        return $totalPriceGross;
+    }
+
     public function getDataForView(): array
     {
         $itemsData = [];

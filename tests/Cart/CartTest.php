@@ -16,7 +16,7 @@ class CartTest extends TestCase
      */
     public function itAddsOneProduct(): void
     {
-        $product = $this->buildTestProduct(1, 15000);
+        $product = $this->buildTestProduct(1, 15000, 0);
 
         $cart = new Cart();
         $cart->addProduct($product, 1);
@@ -31,8 +31,8 @@ class CartTest extends TestCase
      */
     public function itRemovesExistingProduct(): void
     {
-        $product1 = $this->buildTestProduct(1, 15000);
-        $product2 = $this->buildTestProduct(2, 10000);
+        $product1 = $this->buildTestProduct(1, 15000, 0);
+        $product2 = $this->buildTestProduct(2, 10000, 0);
 
         $cart = new Cart();
         $cart->addProduct($product1, 1)
@@ -49,7 +49,7 @@ class CartTest extends TestCase
      */
     public function itIncreasesQuantityWhenAddingAnExistingProduct(): void
     {
-        $product = $this->buildTestProduct(1, 15000);
+        $product = $this->buildTestProduct(1, 15000, 0);
 
         $cart = new Cart();
         $cart->addProduct($product, 1)
@@ -64,7 +64,7 @@ class CartTest extends TestCase
      */
     public function itUpdatesQuantityOfAnExistingItem(): void
     {
-        $product = $this->buildTestProduct(1, 15000);
+        $product = $this->buildTestProduct(1, 15000, 0);
 
         $cart = new Cart();
         $cart->addProduct($product, 1)
@@ -79,7 +79,7 @@ class CartTest extends TestCase
      */
     public function itAddsANewItemWhileSettingQuantityForNonExistentItem(): void
     {
-        $product = $this->buildTestProduct(1, 15000);
+        $product = $this->buildTestProduct(1, 15000, 0);
 
         $cart = new Cart();
         $cart->setQuantity($product, 1);
@@ -95,7 +95,7 @@ class CartTest extends TestCase
      */
     public function itThrowsExceptionWhileGettingNonExistentItem(int $index): void
     {
-        $product = $this->buildTestProduct(1, 15000);
+        $product = $this->buildTestProduct(1, 15000, 0);
 
         $cart = new Cart();
         $cart->addProduct($product, 1);
@@ -108,7 +108,7 @@ class CartTest extends TestCase
     public function removingNonExistentItemDoesNotRaiseException(): void
     {
         $cart = new Cart();
-        $cart->addProduct($this->buildTestProduct(1, 15000));
+        $cart->addProduct($this->buildTestProduct(1, 15000, 0));
         $cart->removeProduct(new Product());
 
         $this->assertCount(1, $cart->getItems());
@@ -120,8 +120,8 @@ class CartTest extends TestCase
     public function itClearsCartAfterCheckout(): void
     {
         $cart = new Cart();
-        $cart->addProduct($this->buildTestProduct(1, 15000));
-        $cart->addProduct($this->buildTestProduct(2, 10000), 2);
+        $cart->addProduct($this->buildTestProduct(1, 15000, 5));
+        $cart->addProduct($this->buildTestProduct(2, 10000, 0), 2);
 
         $order = $cart->checkout(7);
 
@@ -129,9 +129,11 @@ class CartTest extends TestCase
         $this->assertEquals(0, $cart->getTotalPrice());
         $this->assertInstanceOf(Order::class, $order);
         $this->assertEquals(['id' => 7, 'items' => [
-            ['id' => 1, 'quantity' => 1, 'total_price' => 15000],
-            ['id' => 2, 'quantity' => 2, 'total_price' => 20000],
-        ], 'total_price' => 35000], $order->getDataForView());
+            ['id' => 1, 'quantity' => '1', 'total_price' => '15000',
+                'total_price_gross' => '15750', 'product_vat' => '5%'],
+            ['id' => 2, 'quantity' => '2', 'total_price' => '20000',
+                'total_price_gross' => '20000', 'product_vat' => '0%'],
+        ], 'total_price' => '35000', 'total_price_gross' => '35750'], $order->getDataForView());
     }
 
     public function getNonExistentItemIndexes(): array
@@ -144,8 +146,8 @@ class CartTest extends TestCase
         ];
     }
 
-    private function buildTestProduct(int $id, float $price): Product
+    private function buildTestProduct(int $id, float $price, float $vat): Product
     {
-        return (new Product())->setId($id)->setUnitPrice($price);
+        return (new Product())->setId($id)->setUnitPrice($price)->setVat($vat);
     }
 }
