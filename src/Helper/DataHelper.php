@@ -1,6 +1,6 @@
 <?php
 
-namespace Recruitment\Helpers;
+namespace Recruitment\Helper;
 
 class DataHelper
 {
