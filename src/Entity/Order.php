@@ -4,7 +4,7 @@ namespace Recruitment\Entity;
 
 use Recruitment\Cart\Cart;
 use Recruitment\Interfaces\PreparedDataInterface;
-use Recruitment\Helpers\DataHelper;
+use Recruitment\Helper\DataHelper;
 
 class Order extends Entity implements PreparedDataInterface
 {

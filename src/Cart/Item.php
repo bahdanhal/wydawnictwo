@@ -5,7 +5,7 @@ namespace Recruitment\Cart;
 use Recruitment\BaseEntity;
 use Recruitment\Entity\Product;
 use Recruitment\Cart\Exception\QuantityTooLowException;
-use Recruitment\Helpers\DataHelper;
+use Recruitment\Helper\DataHelper;
 use Recruitment\Interfaces\PreparedDataInterface;
 
 class Item extends BaseEntity implements PreparedDataInterface
