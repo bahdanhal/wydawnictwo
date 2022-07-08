@@ -9,11 +9,14 @@ class Product extends Entity
     private $name;
     private $minimumQuantity;
     private $price;
+    private $vat;
     private const DEFAULT_MINIMUM_QUANTITY = 1.000;
+    private const DEFAULT_VAT = 0.000;
     
     public function __construct()
     {
         $this->minimumQuantity = static::DEFAULT_MINIMUM_QUANTITY;
+        $this->vat = static::DEFAULT_VAT;
     }
 
     public function setMinimumQuantity(float $minimumQuantity): Product
@@ -28,6 +31,20 @@ class Product extends Entity
     public function getMinimumQuantity(): float
     {
         return $this->minimumQuantity;
+    }
+
+    public function setVat(float $vat): Product
+    {
+        if ($vat < 0) {
+            throw new \InvalidArgumentException();
+        }
+        $this->vat = $vat;
+        return $this;
+    }
+
+    public function getVat(): float
+    {
+        return $this->vat;
     }
 
 
@@ -54,5 +71,10 @@ class Product extends Entity
     public function getUnitPrice(): float
     {
         return $this->price;
+    }
+
+    public function getUnitPriceGross(): float
+    {
+        return $this->price * (1 + 0.01 * $this->vat);
     }
 }

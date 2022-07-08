@@ -4,6 +4,7 @@ namespace Recruitment\Entity;
 
 use Recruitment\Cart\Cart;
 use Recruitment\Interfaces\PreparedDataInterface;
+use Recruitment\Helpers\DataHelper;
 
 class Order extends Entity implements PreparedDataInterface
 {
@@ -16,8 +17,11 @@ class Order extends Entity implements PreparedDataInterface
 
     public function getDataForView(): array
     {
-        $items = $this->cart->getDataForView();
-        $totalPrice = $this->cart->getTotalPrice();
-        return ['id' => $this->getId(), 'items' => $items, 'total_price' => $totalPrice];
+        return [
+            'id' => $this->getId(),
+            'items' => $this->cart->getDataForView(),
+            'total_price' => DataHelper::prepareFloat($this->cart->getTotalPrice()),
+            'total_price_gross' => DataHelper::prepareFloat($this->cart->getTotalPriceGross())
+        ];
     }
 }

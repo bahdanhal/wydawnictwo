@@ -5,6 +5,7 @@ namespace Recruitment\Cart;
 use Recruitment\BaseEntity;
 use Recruitment\Entity\Product;
 use Recruitment\Cart\Exception\QuantityTooLowException;
+use Recruitment\Helpers\DataHelper;
 use Recruitment\Interfaces\PreparedDataInterface;
 
 class Item extends BaseEntity implements PreparedDataInterface
@@ -45,12 +46,27 @@ class Item extends BaseEntity implements PreparedDataInterface
         return $this->product->getUnitPrice() * $this->quantity;
     }
 
+    public function getTotalPriceGross(): float
+    {
+        return $this->product->getUnitPriceGross() * $this->quantity;
+    }
+
+    public function getProductVatStr(): string
+    {
+        $vat = $this->product->getVat();
+        $vatStr = DataHelper::prepareFloat($vat);
+        $vatStr .= '%';
+        return $vatStr;
+    }
+
     public function getDataForView(): array
     {
         return [
             'id' => $this->product->getId(),
-            'quantity' => $this->getQuantity(),
-            'total_price' => $this->getTotalPrice()
+            'quantity' => DataHelper::prepareFloat($this->getQuantity()),
+            'total_price' => DataHelper::prepareFloat($this->getTotalPrice()),
+            'total_price_gross' => DataHelper::prepareFloat($this->getTotalPriceGross()),
+            'product_vat' => $this->getProductVatStr()
         ];
     }
 }
